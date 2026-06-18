@@ -14,13 +14,13 @@
 
     <div class="input-group">
       <input
-        id="expression"
+        id="input1"
         type="text"
         placeholder="e.g. 10 + 3 * -2"
         autocomplete="off"
         spellcheck="false"
       />
-      <button id="eval-btn">Evaluate</button>
+      <button>Evaluate</button>
     </div>
 
     <p class="hint">
@@ -38,18 +38,19 @@
     <p class="examples-label">Try an example</p>
     <div class="chips">
       <span class="chip" onclick="loadExample('10 + 5 * 2')">10 + 5 * 2</span>
-      <span class="chip" onclick="loadExample('-4 * 3 + 8')">-4 * 3 + 8</span>
+      <span class="chip" onclick="loadExample('1 + -2')">1 + -2</span>
       <span class="chip" onclick="loadExample('100 / 4 - 3')">100 / 4 - 3</span>
-      <span class="chip" onclick="loadExample('3 $ 5')">3 $ 5 ❌</span>
-      <span class="chip" onclick="loadExample('5 */ 3')">5 */ 3 ❌</span>
-      <span class="chip" onclick="loadExample('2 +')">2 + ❌</span>
+      <span class="chip" onclick="loadExample('a + 2')">a + 2 ❌</span>
+      <span class="chip" onclick="loadExample('1+/2')">1+/2 ❌</span>
+      <span class="chip" onclick="loadExample('+1 + 2')">+1 + 2 ❌</span>
+      <span class="chip" onclick="loadExample('1+2+')">1+2+ ❌</span>
     </div>
   </div>
 
   <script type="text/javascript" src="./script.js"></script>
   <script>
     function loadExample(expr) {
-      document.getElementById('expression').value = expr;
+      document.getElementById('input1').value = expr;
       evaluate();
     }
   </script>

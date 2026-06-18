@@ -1,7 +1,6 @@
-//your code here
 class OutOfRangeError extends Error {
   constructor(arg) {
-    super(`Expression should only consist of integers and +-/* characters and not ${arg}`);
+    super(`Expression should only consist of integers and +-/* characters and not '${arg}'`);
     this.name = "OutOfRangeError";
   }
 }
@@ -14,30 +13,31 @@ class InvalidExprError extends Error {
 }
 
 function evalString(expression) {
-  // Check for invalid (out-of-range) characters
+  // 1. Check for out-of-range characters (anything not digit, operator, space)
   const invalidMatch = expression.match(/[^0-9+\-*\/\s]/);
   if (invalidMatch) {
     throw new OutOfRangeError(invalidMatch[0]);
   }
 
-  // Check for invalid operator combinations: two operators in a row (e.g. ++, */, +*)
-  // Allow leading minus for negative numbers, but not things like "5 */ 3" or "5 ++ 3"
-  if (/[+\-*/]{2,}/.test(expression.replace(/\s/g, ""))) {
-    // Allow a single leading minus sign or minus after an operator (e.g. "5 * -3")
-    // But not double operators like ++, **, /*, etc.
-    const cleaned = expression.replace(/\s/g, "");
-    if (/([+\-*/][+*/])|([+*/]{2,})/.test(cleaned)) {
-      throw new InvalidExprError();
-    }
+  const trimmed = expression.trim();
+
+  // 2. Check for leading invalid operator (+ * / but NOT -)
+  if (/^[+*/]/.test(trimmed)) {
+    const err = new SyntaxError("Expression should not start with invalid operator");
+    err.name = "SyntaxError";
+    throw err;
   }
 
-  // Check for operator at end of expression
-  if (/[+\-*/]\s*$/.test(expression.trim())) {
-    throw new InvalidExprError();
+  // 3. Check for trailing operator (any of + - * /)
+  if (/[+\-*/]$/.test(trimmed)) {
+    const err = new SyntaxError("Expression should not end with invalid operator");
+    err.name = "SyntaxError";
+    throw err;
   }
 
-  // Check for expression starting with an operator other than minus
-  if (/^\s*[+*/]/.test(expression)) {
+  // 4. Check for invalid operator combinations (e.g. +/, ++, */, +*, but allow *- or /- for negatives)
+  //    Pattern: any operator followed by another operator that is NOT a minus
+  if (/[+\-*/][+*/]/.test(expression.replace(/\s/g, ""))) {
     throw new InvalidExprError();
   }
 
@@ -45,7 +45,7 @@ function evalString(expression) {
 }
 
 function evaluate() {
-  const input = document.getElementById("expression").value;
+  const input = document.getElementById("input1").value;
   const resultBox = document.getElementById("result");
   const errorBox = document.getElementById("error");
 
@@ -55,8 +55,7 @@ function evaluate() {
   errorBox.classList.remove("visible");
 
   if (!input.trim()) {
-    errorBox.textContent = "Please enter an expression.";
-    errorBox.classList.add("visible");
+    alert("failed");
     return;
   }
 
@@ -64,15 +63,18 @@ function evaluate() {
     const result = evalString(input);
     resultBox.textContent = `= ${result}`;
     resultBox.classList.add("visible");
+    alert("passed");
   } catch (e) {
     errorBox.textContent = `${e.name}: ${e.message}`;
     errorBox.classList.add("visible");
+    alert("failed");
+    throw e;  // rethrow so Cypress uncaught:exception handler can inspect it
   }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  const btn = document.getElementById("eval-btn");
-  const input = document.getElementById("expression");
+  const btn = document.querySelector("button");
+  const input = document.getElementById("input1");
 
   btn.addEventListener("click", evaluate);
 
