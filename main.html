@@ -1,16 +1,58 @@
 <!DOCTYPE html>
-
 <html>
-
 <head>
-	<link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
-	<!-- the entire body must be written by student -->
-    <script type="text/javascript" src="./script.js">
-</script>
+
+  <div class="card">
+    <div class="header">
+      <div class="tag">JS Error Handling</div>
+      <h1>Expression Evaluator</h1>
+      <p class="subtitle">Evaluates integer arithmetic with <code>+</code> <code>-</code> <code>*</code> <code>/</code>. Invalid characters throw <strong>OutOfRangeError</strong>; malformed expressions throw <strong>InvalidExprError</strong>.</p>
+    </div>
+
+    <div class="input-group">
+      <input
+        id="expression"
+        type="text"
+        placeholder="e.g. 10 + 3 * -2"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <button id="eval-btn">Evaluate</button>
+    </div>
+
+    <p class="hint">
+      Allowed: integers, spaces, <code>+</code> <code>-</code> <code>*</code> <code>/</code>.
+      Anything else is out of range. Press <code>Enter</code> or click Evaluate.
+    </p>
+
+    <div class="output">
+      <div id="result"></div>
+      <div id="error"></div>
+    </div>
+
+    <hr class="divider" />
+
+    <p class="examples-label">Try an example</p>
+    <div class="chips">
+      <span class="chip" onclick="loadExample('10 + 5 * 2')">10 + 5 * 2</span>
+      <span class="chip" onclick="loadExample('-4 * 3 + 8')">-4 * 3 + 8</span>
+      <span class="chip" onclick="loadExample('100 / 4 - 3')">100 / 4 - 3</span>
+      <span class="chip" onclick="loadExample('3 $ 5')">3 $ 5 ❌</span>
+      <span class="chip" onclick="loadExample('5 */ 3')">5 */ 3 ❌</span>
+      <span class="chip" onclick="loadExample('2 +')">2 + ❌</span>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="./script.js"></script>
+  <script>
+    function loadExample(expr) {
+      document.getElementById('expression').value = expr;
+      evaluate();
+    }
+  </script>
 
 </body>
-
 </html>
